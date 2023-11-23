@@ -87,12 +87,7 @@ struct MagnificationEffectHelper<Content: View>: View {
                         lastStoredOffset = offset
                         coordinates.x = coordinates.xCenter + offset.width
                         coordinates.y = coordinates.yCenter + offset.height
-                        print("x: \(coordinates.x) y: \(coordinates.y)")
                     }
             )
-            .onTapGesture(coordinateSpace: .global)  { location in
-                print("Tapped at \(location)")
-                    
-            }
     }
 }

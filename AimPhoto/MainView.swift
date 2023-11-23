@@ -20,7 +20,6 @@ struct MainView: View {
     @State private var sourceType: UIImagePickerController.SourceType = .camera
     @State private var image: UIImage?
     @State private var showMenu = false
-    @State private var isMoving = true
     @State private var showingAlert = false
 
     private let pasteboard = UIPasteboard.general
@@ -44,11 +43,6 @@ struct MainView: View {
                                     yPosition = rect.minY
                                     coordinates.imageX = xPosition
                                     coordinates.imageY = yPosition
-                                    print("***********************")
-                                    print("x: \(coordinates.x), y:  \(coordinates.y)")
-                                    print("x0: \(coordinates.imageX), y0:  \(coordinates.imageY)")
-                                    print("XImage: \(coordinates.x - coordinates.imageX), YImage:  \(coordinates.y - coordinates.imageY)")
-                                    print("***************")
                                     scale = saveScale
                                     
                                     return Color.clear
@@ -57,6 +51,9 @@ struct MainView: View {
                                 .magnificationEffect(scale, self.size, .green)
                                 .ignoresSafeArea()
                                 .contentShape(Rectangle())
+                        }
+                        .onAppear {
+                            showMenu = true
                         }
                     } else {
                         Button {
@@ -169,7 +166,7 @@ struct MainView: View {
     }
     
     func copyToClipboard() {
-        pasteboard.string = String("\(coordinates.y - coordinates.imageY)")
+        pasteboard.string = coordinates.description
     }
 }
 

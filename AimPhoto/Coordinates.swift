@@ -6,7 +6,6 @@ import Foundation
 
 class Coordinates: CustomStringConvertible {
     
-    var block = false
     var x: CGFloat = 0
     var y: CGFloat = 0
     var xCenter: CGFloat = 0
