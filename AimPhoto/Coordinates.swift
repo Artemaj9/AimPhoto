@@ -9,6 +9,8 @@ class Coordinates: CustomStringConvertible {
     var block = false
     var x: CGFloat = 0
     var y: CGFloat = 0
+    var xCenter: CGFloat = 0
+    var yCenter: CGFloat = 0
     var imageX: CGFloat = 0
     var imageY: CGFloat = 0
     var description: String {

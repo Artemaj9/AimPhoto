@@ -12,7 +12,7 @@ extension View {
                 Rectangle()
                     .overlay {
                         content()
-                            .blendMode(.destinationOut)
+                           .blendMode(.destinationOut)
                     }
             }
     }

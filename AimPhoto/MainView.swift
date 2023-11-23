@@ -19,7 +19,7 @@ struct MainView: View {
     @State private var showImagePicker = false
     @State private var sourceType: UIImagePickerController.SourceType = .camera
     @State private var image: UIImage?
-    @State private var showMenu = true
+    @State private var showMenu = false
     @State private var isMoving = true
     @State private var showingAlert = false
 
@@ -31,37 +31,48 @@ struct MainView: View {
             GeometryReader {
                 let size = $0.size
                 ZStack {
-                    GeometryReader { geo in
-                        Image(uiImage: image ?? UIImage(named: "foto")!)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .background(GeometryReader { gp -> Color in
-                                let rect = gp.frame(in: .global)
-                                let saveScale = scale
-                                scale = 0
-                                        xPosition = rect.minX
-                                        yPosition = rect.minY
-                                        coordinates.imageX = xPosition
-                                        coordinates.imageY = yPosition
-                                
-                                
-                                print("***********************")
-                                print("x: \(coordinates.x), y:  \(coordinates.y)")
-                                print("x0: \(coordinates.imageX), y0:  \(coordinates.imageY)")
-                                print("XImage: \(coordinates.x - coordinates.imageX), YImage:  \(coordinates.y - coordinates.imageY)")
-                                print("***************")
-                                scale = saveScale
-                                
-                                return Color.clear
-                            })
-                            .frame(width: size.width, height: size.height)
-                            .magnificationEffect(scale, self.size, .green)
-                            .ignoresSafeArea()
-                            .contentShape(Rectangle())
+                    if let image {
+                        GeometryReader { geo in
+                            Image(uiImage: image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .background(GeometryReader { gp -> Color in
+                                    let rect = gp.frame(in: .global)
+                                    let saveScale = scale
+                                    scale = 0
+                                    xPosition = rect.minX
+                                    yPosition = rect.minY
+                                    coordinates.imageX = xPosition
+                                    coordinates.imageY = yPosition
+                                    print("***********************")
+                                    print("x: \(coordinates.x), y:  \(coordinates.y)")
+                                    print("x0: \(coordinates.imageX), y0:  \(coordinates.imageY)")
+                                    print("XImage: \(coordinates.x - coordinates.imageX), YImage:  \(coordinates.y - coordinates.imageY)")
+                                    print("***************")
+                                    scale = saveScale
+                                    
+                                    return Color.clear
+                                })
+                                .frame(width: size.width, height: size.height)
+                                .magnificationEffect(scale, self.size, .green)
+                                .ignoresSafeArea()
+                                .contentShape(Rectangle())
+                        }
+                    } else {
+                        Button {
+                            showSheet = true
+                        } label: {
+                            Text("Добавить фото")
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(.red)
+                                .cornerRadius(15)
+                        }
                     }
                     
                     HStack {
                         Spacer()
+                        
                         Button {
                             showMenu.toggle()
                         } label: {
@@ -82,13 +93,7 @@ struct MainView: View {
                                     .foregroundColor(.gray)
                                     .frame(width: 35, alignment: .leading)
                                 
-                                Slider(value: $scale, in: 0.1...3)
-                                    .onSubmit {
-                                        coordinates.block = true
-                                    }
-                                    .onChange(of: scale) { newValue in
-                                        coordinates.block = true
-                                    }
+                                Slider(value: $scale, in: 0...3)
                                 
                                 Button {
                                     showSheet = true
@@ -98,6 +103,7 @@ struct MainView: View {
                                         .foregroundColor(.red)
                                 }
                                 .actionSheet(isPresented: $showSheet) {
+                                    
                                     ActionSheet(title: Text("Select photo"),
                                                 message: Text("Choose"), buttons: [
                                                     .default(Text("Photo library")) {
@@ -113,7 +119,7 @@ struct MainView: View {
                                     )
                                 }
                             }
-                            .tint(.black)
+                            .tint(.red)
                             
                             HStack (spacing: 14) {
                                 Text("Size")
@@ -126,12 +132,13 @@ struct MainView: View {
                                     copyToClipboard()
                                     showingAlert = true
                                 } label: {
+                                    
                                     Image(systemName: "arrow.right.doc.on.clipboard")
                                         .padding()
                                         .foregroundColor(.red)
                                 }
                             }
-                            .tint(.black)
+                            .tint(.red)
                         }
                         .opacity(showMenu ? 1 : 0)
                         .animation(.easeInOut, value: showMenu)
