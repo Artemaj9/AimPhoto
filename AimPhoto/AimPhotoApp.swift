@@ -11,7 +11,7 @@ import SwiftUI
 struct AimPhotoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
         }
     }
 }

@@ -37,6 +37,7 @@ struct MagnificationEffectHelper<Content: View>: View {
     
     var body: some View {
         content
+          //  .frame(width: 10,height: 10))
         .reverseMask(content: {
             let newCircleSize = 150.0 + size
             Circle()
@@ -50,6 +51,7 @@ struct MagnificationEffectHelper<Content: View>: View {
                     content
                     .offset(x: -offset.width, y: -offset.height)
                     .frame(width: newCircleSize, height: newCircleSize)
+                    
                     .scaleEffect(1 + scale)
                     .clipShape(Circle())
                     .offset(offset)
@@ -62,9 +64,24 @@ struct MagnificationEffectHelper<Content: View>: View {
                             .frame(width: size.width, height: size.height)
                     }
                     .frame(width: 20, height: 20)
+                    .background(GeometryReader { gp -> Color in
+                        let rect = gp.frame(in: .global)
+                     
+                            DispatchQueue.main.async {
+                                midx = rect.midX
+                                midy = rect.midY
+                                coordinates.x = midx
+                                coordinates.y = midy
+                                print("PlusX = \(coordinates.x)")
+                                print("PlusY = \(coordinates.y)")
+                        }
+                        return Color.clear
+                    })
                 }
             }
-            .contentShape(Rectangle())
+
+           // .contentShape(Rectangle())
+
             .gesture(
                 DragGesture()
                     .onChanged { value in
@@ -78,19 +95,9 @@ struct MagnificationEffectHelper<Content: View>: View {
                         print("x: \(coordinates.x) y: \(coordinates.y)")
                     }
             )
-            .background(GeometryReader { gp -> Color in
-                let rect = gp.frame(in: .global)
-                DispatchQueue.main.async {
-                    midx = rect.midX
-                    midy = rect.midY
-                    coordinates.x = rect.midX
-                    coordinates.y = rect.midY
-                }
-                return Color.clear
-            }
-            .frame(width: 10,height: 10))
             .onTapGesture(coordinateSpace: .global)  { location in
                 print("Tapped at \(location)")
+                    
             }
     }
 }
